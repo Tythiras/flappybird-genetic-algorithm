@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Main extends PApplet {
     int frameRate = 1000;
-    int populationSize = 50;
+    int populationSize = 100;
     float gravity = 0.2f;
     float jumpFactor = 6f;
     float pillarCount = 4;
