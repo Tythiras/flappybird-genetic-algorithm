@@ -7,14 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends PApplet {
-    int frameRate = 150;
-    int populationSize = 100;
+    int frameRate = 1000;
+    int populationSize = 50;
     float gravity = 0.2f;
-    float jumpFactor = 5f;
-    float pillarCount = 5;
-    float openingHeight = 150;
+    float jumpFactor = 6f;
+    float pillarCount = 4;
+    float openingHeight = 130;
     float birdX = 250;
     PVector startPoint = new PVector(birdX, 250);
+    int pillarThickness = 60;
+    int birdRadius = 15;
     float pillarDist;
     int score;
     int topScore = 0;
@@ -22,7 +24,7 @@ public class Main extends PApplet {
 
     int nextPillarIndex;
     //jump trigger point for ai
-    float triggerPoint = 1f;
+    float triggerPoint = 0f;
 
     ArrayList<Pillar> pillars;
     ArrayList<Bird> birds;
@@ -39,7 +41,7 @@ public class Main extends PApplet {
         birds = new ArrayList<Bird>();
         //start population
         for(int i = 0; i < populationSize; i++) {
-            Bird bird = new Bird(this, new PVector(startPoint.x, startPoint.y));
+            Bird bird = new Bird(this, new PVector(startPoint.x, startPoint.y), birdRadius);
             bird.openingUpFactor = random(-10, 10);
             bird.openingDownFactor = random(-10, 10);
             bird.distFactor = random(-10, 10);
@@ -81,7 +83,7 @@ public class Main extends PApplet {
         score = 0;
         pillars = new ArrayList<Pillar>();
         for(int i = 0; i < pillarCount; i++) {
-            pillars.add(new Pillar(this, birdX + 200 + pillarDist * i, openingHeight));
+            pillars.add(new Pillar(this, birdX + 200 + pillarDist * i, openingHeight, pillarThickness));
         }
         nextPillarIndex = 0;
     }
@@ -100,7 +102,7 @@ public class Main extends PApplet {
     public void runFrame() {
         //nextPillar detection
         Pillar nextPillar = pillars.get(nextPillarIndex);
-        if(nextPillar.x < birdX) {
+        if(nextPillar.x + pillarThickness < (birdX - birdRadius)) {
             if(nextPillarIndex+1 >= pillars.size()) {
                 nextPillarIndex = 0;
             } else {
@@ -131,10 +133,10 @@ public class Main extends PApplet {
             if(bird.location.y + bird.radius > height) collision = true;
             if(!collision) {
                 for (Pillar pillar : pillars) {
-                    if (pillar.x < 0) {
+                    if (pillar.x + pillarThickness / 2 < 0) {
                         score++;
                         if(score > topScore) topScore = score;
-                        pillar.x = width;
+                        pillar.x = width + pillarThickness / 2;
                         pillar.generateOpening();
                     } else if (pillar.detectCollision(bird)) {
                         collision = true;

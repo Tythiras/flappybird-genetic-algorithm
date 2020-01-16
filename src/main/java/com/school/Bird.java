@@ -7,7 +7,7 @@ public class Bird {
     PApplet p;
     PVector location;
     PVector velocity;
-    int radius = 15;
+    int radius;
 
     float distValue;
     float openingValue;
@@ -17,10 +17,11 @@ public class Bird {
     float distFactor;
 
 
-    public Bird(PApplet parent, PVector startLoc) {
+    public Bird(PApplet parent, PVector startLoc, int radius) {
         this.p = parent;
         location = startLoc;
         velocity = new PVector(0, 0);
+        this.radius = radius;
     }
 
     float getFitness() {
@@ -38,27 +39,37 @@ public class Bird {
     }
 
     float getSum(Pillar next) {
-        //for fitness
-        openingValue = next.openingHeight / Math.abs(location.y - next.openingY);
+        //for fitness if relevant
+        //openingValue = next.openingHeight / Math.abs(location.y - next.openingY);
 
         //Get values
         float openingUp = location.y - (next.openingY - next.openingHeight / 2);
         float openingDown = (next.openingY + next.openingHeight / 2) - location.y;
-        float distX = next.x - location.x;
+        float distX = (next.x - location.x) +this.radius;
         //return sum with factors
-        return openingUp * openingUpFactor + openingDown * openingDownFactor + distX *distFactor;
+        return openingUp * openingUpFactor + openingDown * openingDownFactor + distX * distFactor;
     }
     void mutate() {
-        if(p.random(1) > 0.9) {
-            float changeAmount = p.random(-1, 1);
-            float f = p.random(3);
-            if(f > 2) {
-                openingUpFactor+=changeAmount;
-            } else if(f > 1) {
-                openingDownFactor+=changeAmount;
-            } else if(f > 0) {
-                distFactor+=changeAmount;
-            }
+        float changeAmount = 0;
+        float r = p.random(1);
+        if(r > 0.9) {
+            changeAmount = p.random(-10, 10);
+        } else if(r > 0.65) {
+            changeAmount = p.random(-1, 1);
+        } else if(r > 0.4) {
+            changeAmount = p.random(-0.1f, 0.1f);
+        } else if(r > 0.2) {
+            changeAmount = p.random(-0.01f, 0.01f);
+        }
+
+
+    float f = p.random(3);
+        if(f > 2) {
+            openingUpFactor+=changeAmount;
+        } else if(f > 1) {
+            openingDownFactor+=changeAmount;
+        } else if(f > 0) {
+            distFactor+=changeAmount;
         }
     }
     void draw() {
@@ -66,7 +77,7 @@ public class Bird {
     }
 
     public Bird pair(Bird mate, PVector startLoc) {
-        Bird child = new Bird(p, startLoc);
+        Bird child = new Bird(p, startLoc, this.radius);
         child.openingDownFactor = avg(this.openingDownFactor, mate.openingDownFactor);
         child.openingUpFactor = avg(this.openingUpFactor, mate.openingUpFactor);
         child.distFactor = avg(this.distFactor, mate.distFactor);
