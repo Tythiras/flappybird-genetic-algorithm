@@ -10,7 +10,6 @@ public class Bird {
     int radius;
 
     float distValue;
-    float openingValue;
 
     float openingUpFactor;
     float openingDownFactor;
@@ -73,6 +72,7 @@ public class Bird {
         }
     }
     void draw() {
+        p.fill(82, 165, 191, 200);
         p.ellipse(location.x, location.y, radius * 2, radius * 2);
     }
 

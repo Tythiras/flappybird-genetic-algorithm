@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends PApplet {
-    int frameRate = 1000;
+    int frameRate = 150;
     int populationSize = 100;
     float gravity = 0.2f;
     float jumpFactor = 6f;
@@ -91,13 +91,15 @@ public class Main extends PApplet {
     public void draw(){
         clear();
 
+        runFrame();
+
         textSize(20);
+        fill(255);
         text("Current: "+score, 50, 20);
         text("Best: "+topScore, 50, 40);
         text("Alive: "+birds.size(), 50, 65);
         text("Generation: "+generation, 50, 85);
 
-        runFrame();
     }
     public void runFrame() {
         //nextPillar detection

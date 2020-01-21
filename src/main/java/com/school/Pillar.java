@@ -32,7 +32,7 @@ public class Pillar {
         return false;
     }
     void draw() {
-        p.stroke(255);
+        p.fill(50, 255, 128);
         p.rect(x - thickness / 2, 0, thickness, openingY - openingHeight / 2);
         p.rect(x - thickness / 2, openingY + openingHeight / 2, thickness, p.height);
     }
